@@ -1,0 +1,27 @@
+# Arquivos de compilação do Java
+*.class
+out/
+
+# Arquivos de log e crash
+*.log
+hs_err_pid*
+
+# Arquivos e pastas de IDEs
+.idea/
+*.iml
+*.iws
+.vscode/
+
+# Arquivos gerados pelo sistema
+# Ignora o conteúdo das pastas, mas não as pastas em si
+data/importar/processados/*
+data/importar/*
+data/notas_json/*
+data/backup/*
+data/turmas/*
+
+data/*
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db

@@ -1,0 +1,26 @@
+[
+  {
+    "codigoTurma": "297135",
+    "nomeTurma": "1º ANO - TÉCNICO EM DESENVOLVIMENTO DE SISTEMAS",
+    "disciplinas": [
+      {
+        "codigoDisciplina": "FUNDAMENTOS_JOGOS",
+        "nomeDisciplina": "FUNDAMENTOS DE JOGOS DIGITAIS"
+      },
+      {
+        "codigoDisciplina": "LOGICA_PROG",
+        "nomeDisciplina": "LÓGICA DE PROGRAMAÇÃO"
+      }
+    ]
+  },
+  {
+    "codigoTurma": "301121",
+    "nomeTurma": "2º ANO - TÉCNICO EM ADMINISTRAÇÃO",
+    "disciplinas": [
+      {
+        "codigoDisciplina": "GESTAO_PESSOAS",
+        "nomeDisciplina": "GESTÃO DE PESSOAS"
+      }
+    ]
+  }
+]

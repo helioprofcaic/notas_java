@@ -1,0 +1,143 @@
+package gui.components;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import model.Situacao;
+import model.Turma;
+import service.DashboardService;
+
+import java.util.Map;
+import java.util.List;
+
+/**
+ * Painel de Dashboard que exibe métricas e gráficos a partir dos dados do banco de dados.
+ */
+public class DashboardPane extends VBox {
+
+    private DashboardService dashboardService;
+
+    public DashboardPane() {
+        this.dashboardService = new DashboardService();
+        this.setPadding(new Insets(20));
+        this.setSpacing(20);
+        this.getStyleClass().add("details-pane"); // Reutiliza o estilo
+
+        Label titulo = new Label("Dashboard - Visão Geral do Arquivo Histórico");
+        titulo.getStyleClass().add("details-title");
+
+        // Carrega os dados do banco
+        List<Turma> turmas = dashboardService.getDadosCompletosDoBD();
+
+        // --- Layout Principal com GridPane ---
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(20);
+
+        // --- Painel de Métricas (KPIs) ---
+        HBox kpiPane = createKpiPane(turmas);
+        grid.add(kpiPane, 0, 0, 2, 1); // Ocupa 2 colunas
+
+        // --- Painel de Gráficos ---
+        PieChart pieChart = createPieChart(turmas);
+        BarChart<String, Number> barChart = createBarChart(turmas);
+        grid.add(pieChart, 0, 1);
+        grid.add(barChart, 1, 1);
+
+        this.getChildren().addAll(titulo, grid);
+    }
+
+    private HBox createKpiPane(List<Turma> turmas) {
+        int totalTurmas = turmas.size();
+        long totalAlunos = turmas.stream().mapToLong(t -> t.getAlunos().size()).sum();
+
+        VBox kpiTurmas = createKpiCard("Total de Turmas", String.valueOf(totalTurmas));
+        VBox kpiAlunos = createKpiCard("Total de Alunos", String.valueOf(totalAlunos));
+
+        HBox hbox = new HBox(30, kpiTurmas, kpiAlunos);
+        return hbox;
+    }
+
+    private VBox createKpiCard(String titulo, String valor) {
+        Label lblTitulo = new Label(titulo);
+        lblTitulo.setStyle("-fx-font-size: 14px; -fx-text-fill: #777;");
+
+        Label lblValor = new Label(valor);
+        lblValor.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2A3F54;");
+
+        VBox card = new VBox(5, lblTitulo, lblValor);
+        card.setAlignment(Pos.CENTER);
+        card.setPadding(new Insets(20));
+        card.setStyle("-fx-background-color: white; -fx-border-color: #E0E0E0; -fx-border-radius: 5; -fx-background-radius: 5;");
+        return card;
+    }
+
+    private PieChart createPieChart(List<Turma> turmas) {
+        PieChart pieChart = new PieChart();
+        pieChart.setTitle("Distribuição de Alunos por Turma");
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        for (Turma turma : turmas) {
+            pieChartData.add(new PieChart.Data(turma.getNomeTurma(), turma.getAlunos().size()));
+        }
+        pieChart.setData(pieChartData);
+        pieChart.setLegendVisible(true);
+        pieChart.setLabelsVisible(false);
+
+        // Adiciona um tooltip para mostrar o valor ao passar o mouse
+        pieChart.getData().forEach(data -> {
+            String percentage = String.format("%.1f%%", (data.getPieValue() / turmas.stream().mapToLong(t -> t.getAlunos().size()).sum()) * 100);
+            javafx.scene.control.Tooltip tooltip = new javafx.scene.control.Tooltip(
+                String.format("%s: %d aluno(s) (%s)", data.getName(), (int) data.getPieValue(), percentage)
+            );
+            javafx.scene.control.Tooltip.install(data.getNode(), tooltip);
+        });
+
+        return pieChart;
+    }
+
+    private BarChart<String, Number> createBarChart(List<Turma> turmas) {
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("Situação Geral dos Alunos (Todas as Disciplinas)");
+        barChart.setLegendVisible(false);
+
+        // Obtém as estatísticas do serviço
+        Map<Situacao, Long> stats = dashboardService.getEstatisticasGeraisDeSituacao(turmas);
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Situação Geral");
+
+        long aprovados = stats.getOrDefault(Situacao.APROVADO, 0L);
+        long recuperacao = stats.getOrDefault(Situacao.RECUPERACAO_FINAL, 0L);
+        long reprovados = stats.getOrDefault(Situacao.REPROVADO, 0L);
+
+        series.getData().add(new XYChart.Data<>("Aprovados", aprovados));
+        series.getData().add(new XYChart.Data<>("Recuperação", recuperacao));
+        series.getData().add(new XYChart.Data<>("Reprovados", reprovados));
+
+        barChart.getData().add(series);
+
+        // Aplica estilos diretamente nos nós do gráfico
+        // É necessário um pequeno atraso para garantir que os nós existam
+        javafx.application.Platform.runLater(() -> {
+            series.getData().get(0).getNode().setStyle("-fx-bar-fill: #26B99A;"); // Verde
+            series.getData().get(1).getNode().setStyle("-fx-bar-fill: #F0AD4E;"); // Laranja
+            series.getData().get(2).getNode().setStyle("-fx-bar-fill: #D9534F;"); // Vermelho
+        });
+
+        return barChart;
+    }
+}

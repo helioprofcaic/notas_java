@@ -1,0 +1,95 @@
+/* --- Estilo Geral --- */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-background-color: #F7F7F7; /* Fundo principal cinza claro */
+}
+
+/* --- Cabeçalho --- */
+.header-pane {
+    -fx-background-color: #2A3F54; /* Azul escuro/cinza */
+    -fx-padding: 10px 20px;
+    -fx-alignment: center-left;
+}
+
+.header-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0 0 0 15px; /* Espaçamento à esquerda do texto */
+}
+
+/* --- Painel de Detalhes da Turma --- */
+.details-pane {
+    -fx-background-color: white;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 0 0 0 1px; /* Borda fina à esquerda */
+}
+
+.details-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* --- Botões --- */
+.button {
+    -fx-background-color: #26B99A; /* Verde/Teal */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 3;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #1E947A; /* Tom mais escuro ao passar o mouse */
+}
+
+/* Botão de Salvar com cor diferente */
+.button-save {
+    -fx-background-color: #337AB7; /* Azul */
+}
+.button-save:hover {
+    -fx-background-color: #286090;
+}
+
+/* --- Tabela --- */
+.table-view {
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-background-color: white;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 0 1px 1px 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+}
+
+/* --- Abas (Tabs) --- */
+.tab-pane .tab:selected {
+    -fx-background-color: white;
+    -fx-border-color: #26B99A;
+    -fx-border-width: 0 0 2px 0; /* Linha inferior na aba selecionada */
+}
+
+/* --- Status de Aluno na Tabela --- */
+.status-aprovado {
+    -fx-text-fill: #26B99A; /* Verde/Teal, mesma cor dos botões */
+    -fx-font-weight: bold;
+}
+
+.status-reprovado {
+    -fx-text-fill: #D9534F; /* Vermelho */
+    -fx-font-weight: bold;
+}
+
+.status-recuperacao {
+    -fx-text-fill: #F0AD4E; /* Laranja/Amarelo */
+    -fx-font-weight: bold;
+}
