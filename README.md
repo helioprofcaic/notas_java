@@ -70,7 +70,7 @@ notas_java/
 
 ## Como Começar
 
-1.  **Clone o Repositório:** `git clone https://github.com/helioprofcaic/notas_java.git
+1.  **Clone o Repositório:** `git clone https://github.com/helioprofcaic/notas_java.git`
 2.  **Configure o Ambiente:** Certifique-se de que seu IDE (IntelliJ, Eclipse, etc.) está configurado com o JDK correto e com o SDK do JavaFX. Veja o guia Configuração do JavaFX.
 3.  **Popule os Dados:**
     - Edite o arquivo `data/turmas-com-disciplinas.json` para refletir suas turmas e disciplinas.
